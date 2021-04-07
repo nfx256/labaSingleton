@@ -43,22 +43,46 @@ int getNumberOfWorkers()
 {
     return numberOfWorkers_;
 }
+void setNumberOfWorkers(int number)
+{
+    if(number >0)
+        numberOfWorkers_ = number;
+}
 double getSquare()
 {
     return square_;
+}
+void setSquare(double number)
+{
+    if(number >0)
+        square_ = number;
 }
 double getIncome()
 {
     return income_;
 }
+void setIncome(double number)
+{
+    if(number >0)
+        income_ = number;
+}
 QString getNameCompany()
 {
    return companyName_;
 }
-
+void setNameCompany(QString name)
+{
+    if(!name.isEmpty())
+        companyName_ = name;
+}
 QList<QString> getListOwners()
 {
     return owners;
+}
+void setListOwners(QList<QString> name)
+{
+    if(!name.isEmpty())
+        owners = name;
 }
 virtual float getTax() = 0;//получение налога, реализация под каждый тип будет своя
 virtual typeEnterprise getType()  = 0;//получение типа предприятия
