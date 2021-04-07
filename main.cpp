@@ -1,4 +1,7 @@
 #include <QCoreApplication>
+#include "singleton.h"
+
+
 QList<QString> averageValues(Singleton &mySingl, Enterprise::typeEnterprise type)
 {
     double avrIncome = 0;
@@ -100,9 +103,53 @@ void infoAboutType(Singleton &mySingl, Enterprise::typeEnterprise type)
     if (!flag)
         qDebug() << "Предприятий типа " << message  << " в реестре нет.";
 }
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    QList<QString> owners;
+    QList<QString> owners1;
 
+    owners << "Mikhail" << "Egor" << "Dima";
+    owners1 << "Mikhail" << "Dima";
+
+    Single company1("OOO.Home", 200, 10, 3,owners);
+    auto tax1 = company1.getTax();
+    Enterprise::typeEnterprise tip1 = company1.getType();
+
+    Serial company2("OOO.Car", 200, 10, 3,owners1);
+    auto tax2 = company2.getTax();
+    Enterprise::typeEnterprise tip2 = company2.getType();
+
+    Mass company3("OOO.Check", 200, 10, 3,owners);
+    auto tax3 = company3.getTax();
+    Enterprise::typeEnterprise tip3 = company3.getType();
+
+    QString name = "name";
+    Singleton *mySingl = Singleton::GetInstance(name);
+    mySingl->addEnterprise(company1);
+    mySingl->addEnterprise(company2);
+    mySingl->addEnterprise(company3);
+
+    int count = mySingl->getCountEnterprise();
+    qDebug() << "Кол-во предприятий в регистре: " << count <<"\n";
+
+    mySingl->deleteEnterprise(company1.getNameCompany());
+    mySingl->addEnterprise(company1);
+    qDebug() << "/////////////////////////////////////////";
+    //mySingl->deleteEnterprise(0);
+    count = mySingl->getCountEnterprise();
+    qDebug() << "Кол-во предприятий в регистре: " << count;
+    Enterprise::typeEnterprise kindOf;
+    kindOf = mySingl->getEnterpriseAtIndex(0).getType();//в консоль выводит сообщение
+    qDebug() << "kindOf :" << static_cast<int>(kindOf);
+    QList<QString> listEnterpriseOfEgor= listEnterprisesOfOwner(*mySingl,"Egor");
+    QList<QString> listEnterpriseTypeOfSingle = averageValues(*mySingl, tip2);
+    infoAboutType(*mySingl, tip1);
+
+//    Mass company3("OOO.Close", 200, 10, 3,4);
+//    auto tax3 = company3.getTax();
+//    Enterprise::typeEnterprise tip3 = company3.getType();
     return a.exec();
+
 }
