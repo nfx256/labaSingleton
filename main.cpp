@@ -33,6 +33,34 @@ QList<QString> averageValues(Singleton &mySingl, Enterprise::typeEnterprise type
     return Avr;
 }
 
+QList<QString> listEnterprisesOfOwner(Singleton &mySingl, QString nameOwner)
+{
+    QList<QString> listEnterprise;
+    bool flag;
+    for(int i = 0; i < mySingl.getCountEnterprise(); i++)
+    {
+        flag = false;
+        QList<QString>listOwners = mySingl.getEnterpriseAtIndex(i).getListOwners();
+        for(int j = 0; j < listOwners.size(); j++)
+        {
+            if(listOwners[j] == nameOwner)
+            {
+                flag = true;
+                break;
+            }
+        }
+        if(flag)
+            listEnterprise.append(mySingl.getEnterpriseAtIndex(i).getNameCompany());
+    }
+    if(!listEnterprise.empty())
+    {
+        qDebug() << "List of enterprises owned by " << qPrintable(nameOwner) << ":";
+    for(int k = 0; k < listEnterprise.size(); k++)
+        qDebug() << qPrintable(listEnterprise[k]);
+    }
+
+    return listEnterprise;
+}
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
