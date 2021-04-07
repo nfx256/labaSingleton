@@ -61,6 +61,45 @@ QList<QString> listEnterprisesOfOwner(Singleton &mySingl, QString nameOwner)
 
     return listEnterprise;
 }
+
+void infoAboutType(Singleton &mySingl, Enterprise::typeEnterprise type)
+{
+
+    QString message ;
+    switch(type)
+    {
+        case Enterprise::typeEnterprise::SINGLE  : message  = "Single" ;break;
+        case Enterprise::typeEnterprise::SERIAL  :  message  = "Serial" ;break;
+        case Enterprise::typeEnterprise::MASS:  message  = "Mass" ;break;
+    }
+    int count = 0;
+    //bool key1 = true;
+    bool flag = false;
+    for(int i = 0; i < mySingl.getCountEnterprise(); i++)
+    {
+        if(mySingl.getEnterpriseAtIndex(i).getType() == type)
+        {
+            if(!flag)
+            {
+                qDebug() << "Информация по предприятиям типа: " << qPrintable(message) << ".\n";
+                flag = true;
+            }
+           count++;
+           qDebug().nospace() << count << ")" << qPrintable(mySingl.getEnterpriseAtIndex(i).getNameCompany()) << "\n"
+                                    << "\t Доход: " << mySingl.getEnterpriseAtIndex(i).getIncome() << '\n'
+                                    << "\t Площадь: " << mySingl.getEnterpriseAtIndex(i).getSquare() << '\n'
+                                    << "\t Кол-во рабочих: " << mySingl.getEnterpriseAtIndex(i).getNumberOfWorkers() << '\n'
+                                    << "\t Заплатит налог: " << mySingl.getEnterpriseAtIndex(i).getTax() << '\n'
+                                    << "\t Список владельцев: ";
+           for(int j = 0; j < mySingl.getEnterpriseAtIndex(i).getListOwners().size(); j++)
+           {
+               qDebug() << "\t\t" << qPrintable(mySingl.getEnterpriseAtIndex(i).getListOwners()[j]);
+           }
+        }
+    }
+    if (!flag)
+        qDebug() << "Предприятий типа " << message  << " в реестре нет.";
+}
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
