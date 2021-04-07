@@ -64,7 +64,7 @@ virtual float getTax() = 0;//получение налога, реализаци
 virtual typeEnterprise getType()  = 0;//получение типа предприятия
 };
 
-#endif // SINGLETON_H
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Single :public Enterprise
 {
 private:
@@ -168,3 +168,120 @@ public:
     }
 
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class Singleton
+{
+protected:
+
+    Singleton(const QString value): value_(value)
+    {
+    }
+
+    static Singleton* singleton_;
+    QString value_;
+    QList<Enterprise*> Enterprises;
+
+
+public:
+
+    Singleton(Singleton &other) = delete;
+
+    void operator=(const Singleton& s) = delete;
+
+    static Singleton *GetInstance(QString& valu);
+
+    void deleteEnterprise(QString name)//по имени компании
+    {
+        bool flag = false;
+        int i = 0 ;
+        for (; i < Enterprises.size(); i++)
+        {
+            if (Enterprises[i]->getNameCompany()== name)
+            {
+                flag = true;
+                break;
+            }
+
+        }
+        if(flag)
+        {
+            Enterprises.removeAt(i);
+            qDebug() << "Из реестра была удалена компания" << qPrintable(name) ;
+            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+        }
+
+    }
+
+    void deleteEnterprise(int index)//по индексу в реестре
+    {
+        if(index >= 0 && index < Enterprises.size())
+        {
+            QString name  = Enterprises[index]->getNameCompany();
+            Enterprises.removeAt(index);
+            qDebug() << "Из реестра была удалена компания" << qPrintable(name);
+            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+        }
+
+    }
+
+
+    void addEnterprise(Enterprise& name)
+    {
+        bool flag = true;
+
+        for (int i = 0; i < Enterprises.size(); i++)
+        {
+            if (Enterprises[i]->getNameCompany()== name.getNameCompany())
+                flag = false;
+        }
+        if(flag)
+        {
+            Enterprises.append(&name);
+            qDebug() << "В реестр была добавлена компания: " << qPrintable(name.getNameCompany());
+            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+        }
+    }
+
+
+
+    Enterprise& getEnterpriseAtIndex(int index)
+    {
+        if(index >= 0 && index < Enterprises.size())
+        {
+           return *Enterprises[index];
+        }
+        else
+        {
+            qDebug() << "ERROR\n" << "Invalid index\n";
+        }
+    }
+
+    int getCountEnterprise()
+    {
+        int i = Enterprises.size();
+        return i;
+    }
+
+
+    QString value() const
+    {
+        return value_;
+    }
+};
+
+Singleton* Singleton::singleton_ = nullptr;
+
+Singleton* Singleton::GetInstance( QString& value)
+{
+
+
+    if(singleton_ == nullptr)
+    {
+        singleton_ = new Singleton(value);
+    }
+    return singleton_;
+};
+
+
