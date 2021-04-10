@@ -4,6 +4,7 @@
 
 QList<QString> averageValues(Singleton &mySingl, Enterprise::typeEnterprise type)
 {
+    QTextStream out(stdout);
     double avrIncome = 0;
     double avrNumberOfWorkers = 0;
     double avrSquare= 0;
@@ -31,13 +32,14 @@ QList<QString> averageValues(Singleton &mySingl, Enterprise::typeEnterprise type
     Avr.append("Average income: " + QString::number(avrIncome,'f',3));
     Avr.append("Average number of workers: " + QString::number(avrNumberOfWorkers,'f',3));
     for(int j = 0; j < Avr.size(); j++){
-        qDebug() << qPrintable(Avr[j]);
+        out << qPrintable(Avr[j]) << "\n";
     }
     return Avr;
 }
 
 QList<QString> listEnterprisesOfOwner(Singleton &mySingl, QString nameOwner)
 {
+    QTextStream out(stdout);
     QList<QString> listEnterprise;
     bool flag;
     for(int i = 0; i < mySingl.getCountEnterprise(); i++)
@@ -57,9 +59,9 @@ QList<QString> listEnterprisesOfOwner(Singleton &mySingl, QString nameOwner)
     }
     if(!listEnterprise.empty())
     {
-        qDebug() << "List of enterprises owned by " << qPrintable(nameOwner) << ":";
+        out << "List of enterprises owned by " << qPrintable(nameOwner) << ":" << "\n";
     for(int k = 0; k < listEnterprise.size(); k++)
-        qDebug() << qPrintable(listEnterprise[k]);
+        out << qPrintable(listEnterprise[k]) << "\n";
     }
 
     return listEnterprise;
@@ -67,7 +69,7 @@ QList<QString> listEnterprisesOfOwner(Singleton &mySingl, QString nameOwner)
 
 void infoAboutType(Singleton &mySingl, Enterprise::typeEnterprise type)
 {
-
+    QTextStream out(stdout);
     QString message ;
     switch(type)
     {
@@ -84,28 +86,29 @@ void infoAboutType(Singleton &mySingl, Enterprise::typeEnterprise type)
         {
             if(!flag)
             {
-                qDebug() << "Информация по предприятиям типа: " << qPrintable(message) << ".\n";
+                out << QString::fromUtf8("Информация по предприятиям типа: ") << qPrintable(message) << ".\n";
                 flag = true;
             }
            count++;
-           qDebug().nospace() << count << ")" << qPrintable(mySingl.getEnterpriseAtIndex(i).getNameCompany()) << "\n"
-                                    << "\t Доход: " << mySingl.getEnterpriseAtIndex(i).getIncome() << '\n'
-                                    << "\t Площадь: " << mySingl.getEnterpriseAtIndex(i).getSquare() << '\n'
-                                    << "\t Кол-во рабочих: " << mySingl.getEnterpriseAtIndex(i).getNumberOfWorkers() << '\n'
-                                    << "\t Заплатит налог: " << mySingl.getEnterpriseAtIndex(i).getTax() << '\n'
-                                    << "\t Список владельцев: ";
+           out << count << ")" << qPrintable(mySingl.getEnterpriseAtIndex(i).getNameCompany()) << "\n"
+                                    << QString::fromUtf8("\t Доход: ") << mySingl.getEnterpriseAtIndex(i).getIncome() << '\n'
+                                    << QString::fromUtf8("\t Площадь: ") << mySingl.getEnterpriseAtIndex(i).getSquare() << '\n'
+                                    << QString::fromUtf8("\t Кол-во рабочих: ") << mySingl.getEnterpriseAtIndex(i).getNumberOfWorkers() << '\n'
+                                    << QString::fromUtf8("\t Заплатит налог: ") << mySingl.getEnterpriseAtIndex(i).getTax() << '\n'
+                                    << QString::fromUtf8("\t Список владельцев: ") << "\n";
            for(int j = 0; j < mySingl.getEnterpriseAtIndex(i).getListOwners().size(); j++)
            {
-               qDebug() << "\t\t" << qPrintable(mySingl.getEnterpriseAtIndex(i).getListOwners()[j]);
+               out << "\t\t" << qPrintable(mySingl.getEnterpriseAtIndex(i).getListOwners()[j]) << "\n";
            }
         }
     }
     if (!flag)
-        qDebug() << "Предприятий типа " << message  << " в реестре нет.";
+        out << QString::fromUtf8("Предприятий типа ") << message  << QString::fromUtf8(" в реестре нет.");
 }
 
 int main(int argc, char *argv[])
 {
+    QTextStream out(stdout);
     QCoreApplication a(argc, argv);
     QList<QString> owners;
     QList<QString> owners1;
@@ -125,24 +128,24 @@ int main(int argc, char *argv[])
     auto tax3 = company3.getTax();
     Enterprise::typeEnterprise tip3 = company3.getType();
 
-    QString name = "name";
+    QString name = "Reestr";
     Singleton *mySingl = Singleton::GetInstance(name);
     mySingl->addEnterprise(company1);
     mySingl->addEnterprise(company2);
     mySingl->addEnterprise(company3);
 
     int count = mySingl->getCountEnterprise();
-    qDebug() << "Кол-во предприятий в регистре: " << count <<"\n";
+    out << QString::fromUtf8("Кол-во предприятий в регистре: ") << count <<"\n";
 
     mySingl->deleteEnterprise(company1.getNameCompany());
     mySingl->addEnterprise(company1);
-    qDebug() << "/////////////////////////////////////////";
+    out << "/////////////////////////////////////////";
     //mySingl->deleteEnterprise(0);
     count = mySingl->getCountEnterprise();
-    qDebug() << "Кол-во предприятий в регистре: " << count;
+    out << QString::fromUtf8("Кол-во предприятий в регистре: ") << count;
     Enterprise::typeEnterprise kindOf;
     kindOf = mySingl->getEnterpriseAtIndex(0).getType();//в консоль выводит сообщение
-    qDebug() << "kindOf :" << static_cast<int>(kindOf);
+    out << "kindOf :" << static_cast<int>(kindOf);
     QList<QString> listEnterpriseOfEgor= listEnterprisesOfOwner(*mySingl,"Egor");
     QList<QString> listEnterpriseTypeOfSingle = averageValues(*mySingl, tip2);
     infoAboutType(*mySingl, tip1);

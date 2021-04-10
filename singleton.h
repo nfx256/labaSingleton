@@ -1,6 +1,7 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
+#include <QTextStream>
 
 class Enterprise {
 private:
@@ -108,13 +109,7 @@ Single(QString companyName, double income, double square, int numberOfWorkers,QL
 }
 Enterprise::typeEnterprise getType() override //вернуть тип enum
 {
-    switch(type)
-    {
-        case typeEnterprise::SINGLE  : qDebug() << "Это предприятие имеет тип: SINGLE\n";  return type;  break;
-        case typeEnterprise::SERIAL  : qDebug() << "Это предприятие имеет тип: SERIAL\n";  return type; break;
-        case typeEnterprise::MASS: qDebug() << "Это предприятие имеет тип: MASS\n";  return type; break;
-    }
-
+    return type;
 }
 float getTax() override
 {
@@ -142,12 +137,7 @@ public:
     }
     Enterprise::typeEnterprise getType()  override
     {
-        switch(type)
-        {
-            case typeEnterprise::SINGLE  : qDebug() << "Это предприятие имеет тип: SINGLE\n";  return type;  break;
-            case typeEnterprise::SERIAL  : qDebug() << "Это предприятие имеет тип: SERIAL\n";  return type; break;
-            case typeEnterprise::MASS: qDebug() << "Это предприятие имеет тип: MASS\n";  return type; break;
-        }
+        return type;
     }
     float getTax() override
     {
@@ -177,12 +167,7 @@ public:
 
     Enterprise::typeEnterprise getType()  override
     {
-        switch(type)
-        {
-            case typeEnterprise::SINGLE  : qDebug() << "Это предприятие имеет тип: SINGLE\n";  return type;  break;
-            case typeEnterprise::SERIAL  : qDebug() << "Это предприятие имеет тип: SERIAL\n";  return type; break;
-            case typeEnterprise::MASS: qDebug() << "Это предприятие имеет тип: MASS\n";  return type; break;
-        }
+        return type;
     }
 
     float getTax() override
@@ -193,18 +178,16 @@ public:
 
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 class Singleton
 {
 protected:
 
-    Singleton(const QString value): value_(value)
+    Singleton(const QString value): name_(value)
     {
     }
 
     static Singleton* singleton_;
-    QString value_;
+    QString name_;
     QList<Enterprise*> Enterprises;
 
 
@@ -218,6 +201,7 @@ public:
 
     void deleteEnterprise(QString name)//по имени компании
     {
+        QTextStream out(stdout);
         bool flag = false;
         int i = 0 ;
         for (; i < Enterprises.size(); i++)
@@ -232,27 +216,26 @@ public:
         if(flag)
         {
             Enterprises.removeAt(i);
-            qDebug() << "Из реестра была удалена компания" << qPrintable(name) ;
-            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+            out << QString::fromUtf8("Из реестра была удалена компания ") << qPrintable(name)<<"\n";
+            out << QString::fromUtf8("Размер реестра: ") << Enterprises.size() << "\n";
         }
 
     }
-
     void deleteEnterprise(int index)//по индексу в реестре
     {
+        QTextStream out(stdout);
         if(index >= 0 && index < Enterprises.size())
         {
             QString name  = Enterprises[index]->getNameCompany();
             Enterprises.removeAt(index);
-            qDebug() << "Из реестра была удалена компания" << qPrintable(name);
-            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+            out << QString::fromUtf8("Из реестра была удалена компания ") << qPrintable(name)<<"\n";
+            out << QString::fromUtf8("Размер реестра: ") << Enterprises.size() << "\n";
         }
 
     }
-
-
     void addEnterprise(Enterprise& name)
     {
+        QTextStream out(stdout);
         bool flag = true;
 
         for (int i = 0; i < Enterprises.size(); i++)
@@ -263,47 +246,41 @@ public:
         if(flag)
         {
             Enterprises.append(&name);
-            qDebug() << "В реестр была добавлена компания: " << qPrintable(name.getNameCompany());
-            qDebug() << "Размер реестра: " << Enterprises.size() << "\n";
+            out << QString::fromUtf8("В реестр была добавлена компания: ") << qPrintable(name.getNameCompany()) << "\n";
+            out << QString::fromUtf8("Размер реестра: ") << Enterprises.size() << "\n";
         }
     }
 
-
-
     Enterprise& getEnterpriseAtIndex(int index)
     {
+        QTextStream out(stdout);
         if(index >= 0 && index < Enterprises.size())
         {
            return *Enterprises[index];
         }
         else
         {
-            qDebug() << "ERROR\n" << "Invalid index\n";
+            out << QString::fromUtf8("ERROR\n") << QString::fromUtf8("Invalid index\n");
         }
     }
-
     int getCountEnterprise()
     {
         int i = Enterprises.size();
         return i;
     }
-
-
     QString value() const
     {
-        return value_;
+        return name_;
     }
 };
 
 Singleton* Singleton::singleton_ = nullptr;
 
-Singleton* Singleton::GetInstance( QString& value)
+Singleton* Singleton::GetInstance( QString& name)
 {
-
-
     if(singleton_ == nullptr)
     {
-        singleton_ = new Singleton(value);
+        singleton_ = new Singleton(name);
     }
     return singleton_;
 };
