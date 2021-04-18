@@ -113,6 +113,9 @@ int main(int argc, char *argv[])
     QList<QString> owners;
     QList<QString> owners1;
 
+
+
+
     owners << "Mikhail" << "Egor" << "Dima";
     owners1 << "Mikhail" << "Dima";
 
@@ -135,14 +138,14 @@ int main(int argc, char *argv[])
     mySingl->addEnterprise(company3);
 
     int count = mySingl->getCountEnterprise();
-    out << QString::fromUtf8("Кол-во предприятий в регистре: ") << count <<"\n";
+    out << QString::fromUtf8("Кол-во предприятий в регистре1: ") << count <<"\n";
 
     mySingl->deleteEnterprise(company1.getNameCompany());
     mySingl->addEnterprise(company1);
-    out << "/////////////////////////////////////////";
+    out << "/////////////////////////////////////////\n";
     //mySingl->deleteEnterprise(0);
     count = mySingl->getCountEnterprise();
-    out << QString::fromUtf8("Кол-во предприятий в регистре: ") << count;
+    out << QString::fromUtf8("Кол-во предприятий в регистре: ") << count <<"\n";
     Enterprise::typeEnterprise kindOf;
     kindOf = mySingl->getEnterpriseAtIndex(0).getType();//в консоль выводит сообщение
     out << "kindOf :" << static_cast<int>(kindOf);
@@ -153,6 +156,8 @@ int main(int argc, char *argv[])
 //    Mass company3("OOO.Close", 200, 10, 3,4);
 //    auto tax3 = company3.getTax();
 //    Enterprise::typeEnterprise tip3 = company3.getType();
-    return a.exec();
+    Enterprise* comp = new Single("OOO.Car", 200, 10, 3,owners1);
+    delete comp;
+    return 0;
 
 }

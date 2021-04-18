@@ -16,4 +16,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    enterprise.h \
+    mass.h \
+    serial.h \
+    single.h \
     singleton.h
